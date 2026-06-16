@@ -63,20 +63,21 @@ func (h *UserHandler) CreateUser(
 	})
 }
 
-	err := h.service.CreateUser(
-		c.Context(),
-		req,
-	)
 
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
+	user, err := h.service.CreateUser(
+	c.Context(),
+	req,
+)
+
+if err != nil {
+	return c.Status(400).JSON(
+		fiber.Map{
 			"error": err.Error(),
-		})
-	}
+		},
+	)
+}
 
-	return c.Status(201).JSON(fiber.Map{
-		"message": "user created",
-	})
+return c.Status(201).JSON(user)
 }
 func (h *UserHandler) ListUsers(
 	c *fiber.Ctx,

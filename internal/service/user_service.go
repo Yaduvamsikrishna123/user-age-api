@@ -15,7 +15,9 @@ type UserService struct {
 	repo *repository.UserRepository
 }
 
-func NewUserService(repo *repository.UserRepository) *UserService {
+func NewUserService(
+	repo *repository.UserRepository,
+) *UserService {
 	return &UserService{
 		repo: repo,
 	}
@@ -44,42 +46,12 @@ func (s *UserService) GetUser(
 		return nil, err
 	}
 
-	age := calculateAge(user.Dob.Time)
-
 	return &models.UserResponse{
 		ID:   user.ID,
 		Name: user.Name,
 		DOB:  user.Dob.Time.Format("2006-01-02"),
-		Age:  age,
+		Age:  calculateAge(user.Dob.Time),
 	}, nil
-}
-
-func (s *UserService) CreateUser(
-	ctx context.Context,
-	req models.CreateUserRequest,
-) error {
-
-	dob, err := time.Parse(
-		"2006-01-02",
-		req.DOB,
-	)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = s.repo.CreateUser(
-		ctx,
-		sqlc.CreateUserParams{
-			Name: req.Name,
-			Dob: pgtype.Date{
-				Time:  dob,
-				Valid: true,
-			},
-		},
-	)
-
-	return err
 }
 
 func (s *UserService) ListUsers(
@@ -111,6 +83,43 @@ func (s *UserService) ListUsers(
 	}
 
 	return response, nil
+}
+
+func (s *UserService) CreateUser(
+	ctx context.Context,
+	req models.CreateUserRequest,
+) (*models.UserResponse, error) {
+
+	dob, err := time.Parse(
+		"2006-01-02",
+		req.DOB,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.repo.CreateUser(
+		ctx,
+		sqlc.CreateUserParams{
+			Name: req.Name,
+			Dob: pgtype.Date{
+				Time:  dob,
+				Valid: true,
+			},
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UserResponse{
+		ID:   user.ID,
+		Name: user.Name,
+		DOB:  user.Dob.Time.Format("2006-01-02"),
+		Age:  calculateAge(user.Dob.Time),
+	}, nil
 }
 
 func (s *UserService) DeleteUser(
