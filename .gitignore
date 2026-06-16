@@ -1,0 +1,14 @@
+.env
+
+bin/
+tmp/
+
+.vscode/
+
+*.exe
+*.dll
+*.so
+*.dylib
+
+*.test
+*.out
