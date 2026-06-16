@@ -81,3 +81,34 @@ func (s *UserService) CreateUser(
 
 	return err
 }
+
+func (s *UserService) ListUsers(
+	ctx context.Context,
+) ([]models.UserResponse, error) {
+
+	users, err := s.repo.ListUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	response := make(
+		[]models.UserResponse,
+		0,
+		len(users),
+	)
+
+	for _, user := range users {
+
+		response = append(
+			response,
+			models.UserResponse{
+				ID:   user.ID,
+				Name: user.Name,
+				DOB:  user.Dob.Time.Format("2006-01-02"),
+				Age:  calculateAge(user.Dob.Time),
+			},
+		)
+	}
+
+	return response, nil
+}

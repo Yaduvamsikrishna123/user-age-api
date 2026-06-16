@@ -10,6 +10,7 @@ func SetupRoutes(
 	app *fiber.App,
 	userHandler *handler.UserHandler,
 ) {
+	app.Get("/users", userHandler.ListUsers)
 	app.Get("/users/:id", userHandler.GetUser)
 	app.Post("/users", userHandler.CreateUser)
 

@@ -29,3 +29,10 @@ func (r *UserRepository) CreateUser(
 ) (sqlc.User, error) {
 	return r.queries.CreateUser(ctx, params)
 }
+
+func (r *UserRepository) ListUsers(
+	ctx context.Context,
+) ([]sqlc.User, error) {
+
+	return r.queries.ListUsers(ctx)
+}

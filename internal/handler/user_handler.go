@@ -78,3 +78,21 @@ func (h *UserHandler) CreateUser(
 		"message": "user created",
 	})
 }
+func (h *UserHandler) ListUsers(
+	c *fiber.Ctx,
+) error {
+
+	users, err := h.service.ListUsers(
+		c.Context(),
+	)
+
+	if err != nil {
+		return c.Status(500).JSON(
+			fiber.Map{
+				"error": "failed to fetch users",
+			},
+		)
+	}
+
+	return c.JSON(users)
+}
