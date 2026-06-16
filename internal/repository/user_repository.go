@@ -57,3 +57,17 @@ func (r *UserRepository) UpdateUser(
 		params,
 	)
 }
+func (r *UserRepository) ListUsersPaginated(
+	ctx context.Context,
+	limit int32,
+	offset int32,
+) ([]sqlc.User, error) {
+
+	return r.queries.ListUsersPaginated(
+		ctx,
+		sqlc.ListUsersPaginatedParams{
+			Limit:  limit,
+			Offset: offset,
+		},
+	)
+}

@@ -171,3 +171,42 @@ func (s *UserService) UpdateUser(
 		Age:  calculateAge(user.Dob.Time),
 	}, nil
 }
+func (s *UserService) ListUsersPaginated(
+	ctx context.Context,
+	page int,
+	limit int,
+) ([]models.UserResponse, error) {
+
+	offset := (page - 1) * limit
+
+	users, err := s.repo.ListUsersPaginated(
+		ctx,
+		int32(limit),
+		int32(offset),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := make(
+		[]models.UserResponse,
+		0,
+		len(users),
+	)
+
+	for _, user := range users {
+
+		response = append(
+			response,
+			models.UserResponse{
+				ID:   user.ID,
+				Name: user.Name,
+				DOB:  user.Dob.Time.Format("2006-01-02"),
+				Age:  calculateAge(user.Dob.Time),
+			},
+		)
+	}
+
+	return response, nil
+}

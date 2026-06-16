@@ -83,8 +83,18 @@ func (h *UserHandler) ListUsers(
 	c *fiber.Ctx,
 ) error {
 
-	users, err := h.service.ListUsers(
+	page, _ := strconv.Atoi(
+		c.Query("page", "1"),
+	)
+
+	limit, _ := strconv.Atoi(
+		c.Query("limit", "10"),
+	)
+
+	users, err := h.service.ListUsersPaginated(
 		c.Context(),
+		page,
+		limit,
 	)
 
 	if err != nil {
