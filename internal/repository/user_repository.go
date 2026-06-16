@@ -36,3 +36,13 @@ func (r *UserRepository) ListUsers(
 
 	return r.queries.ListUsers(ctx)
 }
+func (r *UserRepository) DeleteUser(
+	ctx context.Context,
+	id int32,
+) error {
+
+	return r.queries.DeleteUser(
+		ctx,
+		id,
+	)
+}

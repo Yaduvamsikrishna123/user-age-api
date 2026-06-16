@@ -96,3 +96,38 @@ func (h *UserHandler) ListUsers(
 
 	return c.JSON(users)
 }
+func (h *UserHandler) DeleteUser(
+	c *fiber.Ctx,
+) error {
+
+	id, err := strconv.Atoi(
+		c.Params("id"),
+	)
+
+	if err != nil {
+		return c.Status(400).JSON(
+			fiber.Map{
+				"error": "invalid id",
+			},
+		)
+	}
+
+	err = h.service.DeleteUser(
+		c.Context(),
+		int32(id),
+	)
+
+	if err != nil {
+		return c.Status(500).JSON(
+			fiber.Map{
+				"error": "failed to delete user",
+			},
+		)
+	}
+
+	return c.JSON(
+		fiber.Map{
+			"message": "user deleted",
+		},
+	)
+}

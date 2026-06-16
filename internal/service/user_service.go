@@ -112,3 +112,14 @@ func (s *UserService) ListUsers(
 
 	return response, nil
 }
+
+func (s *UserService) DeleteUser(
+	ctx context.Context,
+	id int32,
+) error {
+
+	return s.repo.DeleteUser(
+		ctx,
+		id,
+	)
+}
