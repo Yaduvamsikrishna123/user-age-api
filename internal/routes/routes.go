@@ -14,4 +14,5 @@ func SetupRoutes(
 	app.Get("/users/:id", userHandler.GetUser)
 	app.Post("/users", userHandler.CreateUser)
    	app.Delete("/users/:id", userHandler.DeleteUser)
+   	app.Put("/users/:id", userHandler.UpdateUser)
 }

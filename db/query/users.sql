@@ -21,3 +21,12 @@ FROM users;
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = $1;
+
+-- name: UpdateUser :one
+UPDATE users
+SET
+    name = $2,
+    dob = $3,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+RETURNING *;

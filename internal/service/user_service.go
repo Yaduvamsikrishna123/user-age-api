@@ -132,3 +132,42 @@ func (s *UserService) DeleteUser(
 		id,
 	)
 }
+
+func (s *UserService) UpdateUser(
+	ctx context.Context,
+	id int32,
+	req models.UpdateUserRequest,
+) (*models.UserResponse, error) {
+
+	dob, err := time.Parse(
+		"2006-01-02",
+		req.DOB,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.repo.UpdateUser(
+		ctx,
+		sqlc.UpdateUserParams{
+			ID: id,
+			Name: req.Name,
+			Dob: pgtype.Date{
+				Time:  dob,
+				Valid: true,
+			},
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.UserResponse{
+		ID:   user.ID,
+		Name: user.Name,
+		DOB:  user.Dob.Time.Format("2006-01-02"),
+		Age:  calculateAge(user.Dob.Time),
+	}, nil
+}

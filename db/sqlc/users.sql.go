@@ -100,3 +100,32 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	}
 	return items, nil
 }
+
+const updateUser = `-- name: UpdateUser :one
+UPDATE users
+SET
+    name = $2,
+    dob = $3,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+RETURNING id, name, dob, created_at, updated_at
+`
+
+type UpdateUserParams struct {
+	ID   int32
+	Name string
+	Dob  pgtype.Date
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRow(ctx, updateUser, arg.ID, arg.Name, arg.Dob)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Dob,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}

@@ -46,3 +46,14 @@ func (r *UserRepository) DeleteUser(
 		id,
 	)
 }
+
+func (r *UserRepository) UpdateUser(
+	ctx context.Context,
+	params sqlc.UpdateUserParams,
+) (sqlc.User, error) {
+
+	return r.queries.UpdateUser(
+		ctx,
+		params,
+	)
+}
