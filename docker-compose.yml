@@ -1,0 +1,29 @@
+
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: user-age-db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: vamsi@123
+      POSTGRES_DB: user_age_db
+
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+
+    container_name: user-age-api
+
+    ports:
+      - "3000:3000"
+
+    depends_on:
+      - postgres
+
+    environment:
+      DATABASE_URL: postgres://postgres:vamsi@123@postgres:5432/user_age_db?sslmode=disable
