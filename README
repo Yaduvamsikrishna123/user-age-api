@@ -1,4 +1,4 @@
-# User Age API
+## User Age API
 
 A production-style RESTful API built with **Go**, **Fiber**, **PostgreSQL**, and **SQLC** that manages users and calculates age dynamically from date of birth.
 
