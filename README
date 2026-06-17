@@ -103,7 +103,7 @@ Request:
 
 ```json
 {
-  "name": "John Doe",
+  "name": "Arjun",
   "dob": "2000-05-20"
 }
 ```
@@ -113,7 +113,7 @@ Response:
 ```json
 {
   "id": 1,
-  "name": "John Doe",
+  "name": "Arjun",
   "dob": "2000-05-20",
   "age": 25
 }
