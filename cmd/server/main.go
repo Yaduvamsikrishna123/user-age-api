@@ -51,7 +51,10 @@ func main() {
 	userHandler := handler.NewUserHandler(userService)
 
 	app := fiber.New()
-
+	    
+    app.Use(
+	middleware.RequestID(),
+)
 	app.Use(
 	middleware.LoggerMiddleware(logg),
 )

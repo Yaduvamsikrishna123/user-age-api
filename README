@@ -1,0 +1,349 @@
+# User Age API
+
+A production-style RESTful API built with **Go**, **Fiber**, **PostgreSQL**, and **SQLC** that manages users and calculates age dynamically from date of birth.
+
+## Features
+
+* Create, Read, Update, and Delete (CRUD) users
+* Dynamic age calculation using Go's `time` package
+* PostgreSQL database integration
+* SQLC-generated type-safe database layer
+* Request validation using `go-playground/validator`
+* Structured logging with Uber Zap
+* Request logging middleware
+* Request ID middleware for traceability
+* Pagination support
+* Unit testing
+* Docker & Docker Compose support
+* Clean Architecture (Handler → Service → Repository)
+
+---
+
+## Tech Stack
+
+| Technology     | Purpose                       |
+| -------------- | ----------------------------- |
+| Go             | Backend Language              |
+| Fiber          | HTTP Framework                |
+| PostgreSQL     | Database                      |
+| SQLC           | Type-safe SQL code generation |
+| Uber Zap       | Structured Logging            |
+| Validator      | Input Validation              |
+| Docker         | Containerization              |
+| Docker Compose | Multi-container orchestration |
+
+---
+
+## Project Structure
+
+```text
+user-age-api/
+├── cmd/
+│   └── server/
+│       └── main.go
+│
+├── config/
+│
+├── db/
+│   ├── migrations/
+│   ├── query/
+│   └── sqlc/
+│
+├── internal/
+│   ├── handler/
+│   ├── middleware/
+│   ├── models/
+│   ├── repository/
+│   ├── routes/
+│   ├── service/
+│   └── logger/
+│
+├── Dockerfile
+├── docker-compose.yml
+├── go.mod
+├── go.sum
+└── README.md
+```
+
+---
+
+## Architecture
+
+```text
+Client Request
+      │
+      ▼
+Fiber Handler
+      │
+      ▼
+Service Layer
+(Business Logic)
+      │
+      ▼
+Repository Layer
+      │
+      ▼
+SQLC Generated Queries
+      │
+      ▼
+PostgreSQL
+```
+
+---
+
+## API Endpoints
+
+### Create User
+
+```http
+POST /users
+```
+
+Request:
+
+```json
+{
+  "name": "John Doe",
+  "dob": "2000-05-20"
+}
+```
+
+Response:
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "dob": "2000-05-20",
+  "age": 25
+}
+```
+
+---
+
+### Get All Users
+
+```http
+GET /users
+```
+
+---
+
+### Get User By ID
+
+```http
+GET /users/:id
+```
+
+Example:
+
+```http
+GET /users/1
+```
+
+---
+
+### Update User
+
+```http
+PUT /users/:id
+```
+
+Request:
+
+```json
+{
+  "name": "John Updated",
+  "dob": "1999-01-15"
+}
+```
+
+---
+
+### Delete User
+
+```http
+DELETE /users/:id
+```
+
+---
+
+## Pagination
+
+Retrieve users with pagination:
+
+```http
+GET /users?page=1&limit=5
+```
+
+Example:
+
+```http
+GET /users?page=2&limit=5
+```
+
+---
+
+## Dynamic Age Calculation
+
+The API stores only the user's **date of birth** in the database.
+
+Age is calculated dynamically using Go's `time` package whenever user data is requested.
+
+### Why?
+
+Storing age directly can lead to stale data because age changes every year. Storing DOB ensures age is always accurate.
+
+---
+
+## Request Validation
+
+Input validation is implemented using:
+
+```go
+github.com/go-playground/validator/v10
+```
+
+Example validations:
+
+* Required name
+* Minimum name length
+* Valid date format
+
+---
+
+## Logging
+
+Structured logging is implemented using:
+
+```go
+go.uber.org/zap
+```
+
+Logged information includes:
+
+* HTTP method
+* Request path
+* Status code
+* Request duration
+* Request ID
+
+---
+
+## Request ID Middleware
+
+Every request receives a unique Request ID.
+
+Example response header:
+
+```http
+X-Request-ID: 74ab27fa-7eb9-4e99-9d19-18c481e22656
+```
+
+This improves debugging and request tracing.
+
+---
+
+## Running Locally
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/Yaduvamsikrishna123/user-age-api.git
+cd user-age-api
+```
+
+### 2. Install Dependencies
+
+```bash
+go mod tidy
+```
+
+### 3. Configure Environment
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=postgres://postgres:password@localhost:5432/user_age_db?sslmode=disable
+```
+
+### 4. Run Application
+
+```bash
+go run cmd/server/main.go
+```
+
+Server starts on:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Running With Docker
+
+Build and start services:
+
+```bash
+docker compose up --build
+```
+
+Run in background:
+
+```bash
+docker compose up -d
+```
+
+Stop services:
+
+```bash
+docker compose down
+```
+
+---
+
+## Unit Testing
+
+Run all tests:
+
+```bash
+go test ./...
+```
+
+Example output:
+
+```text
+ok github.com/yaduvamsi/user-age-api/internal/service
+```
+
+---
+
+## Key Learnings
+
+* Building RESTful APIs in Go
+* Clean Architecture principles
+* SQLC for type-safe database access
+* PostgreSQL integration
+* Middleware implementation
+* Docker containerization
+* Unit testing in Go
+* Structured logging and request tracing
+
+---
+
+## Future Improvements
+
+* Swagger/OpenAPI Documentation
+* Authentication & Authorization
+* Rate Limiting
+* CI/CD Pipeline with GitHub Actions
+* Caching with Redis
+
+---
+
+## Author
+
+**Koppula Yadu Vamsi Krishna**
+
+Backend Developer | Go Developer | PostgreSQL | Docker
