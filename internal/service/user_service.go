@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"time"
+	"errors"
 
 	"github.com/yaduvamsi/user-age-api/internal/models"
 	"github.com/yaduvamsi/user-age-api/internal/repository"
@@ -98,6 +99,11 @@ func (s *UserService) CreateUser(
 	if err != nil {
 		return nil, err
 	}
+	if dob.After(time.Now()) {
+	return nil, errors.New(
+		"date of birth cannot be in the future",
+	)
+}
 
 	user, err := s.repo.CreateUser(
 		ctx,
@@ -147,6 +153,11 @@ func (s *UserService) UpdateUser(
 	if err != nil {
 		return nil, err
 	}
+	if dob.After(time.Now()) {
+	return nil, errors.New(
+		"date of birth cannot be in the future",
+	)
+}
 
 	user, err := s.repo.UpdateUser(
 		ctx,
